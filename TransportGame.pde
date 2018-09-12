@@ -17,10 +17,10 @@ int gravity = midgravity;
 int mingravity = 10;
 int maxgravity = 50;
 
-float k = 1080 / height;
+float k = 800 / height;
 void setup() {
-  size(1960, 1080);
-  pg = createGraphics(1960, 1080);
+  size(800, 800);
+  pg = createGraphics(800, 800);
 }
 void draw() {
   if (pre) {
@@ -30,21 +30,21 @@ void draw() {
     rect(0, 0, width, height);
     textSize(height / 20);
     fill(252, 143, 0);
-    text("speed", width / 2 - width / 20, 2 * height / 20);
+    text("Speed", width / 2 - textWidth("Speed")/2, 2 * height / 20);
     fill(0, 255, 0);
     rect(width / 4, height / 8, width / 2, height / 40);
     fill(255, 0, 0);
     ellipse(width / 4 + (width / 2) * (speed - minspeed) / (maxspeed - minspeed),height / 8 + height / 80, height / 20, height / 20);
     
     fill(252, 143, 0);
-    text("jumpspeed", width / 2 - 1.3 * width / 20, 5 * height / 20);
+    text("Jump Speed", width / 2 - textWidth("Jump Speed")/2, 5 * height / 20);
     fill(0, 255, 0);
     rect(width / 4, 1.1 * height / 4, width / 2, height / 40);
     fill(255, 0, 0);
     ellipse(width / 4 + (width / 2) * (jump - minjump) / (maxjump - minjump),1.1 * height / 4 + height / 80, height / 20, height / 20);
     
     fill(252, 143, 0);
-    text("gravity", width / 2 - 1.12 * width / 20, 8 * height / 20);
+    text("Gravity", width / 2 - textWidth("Gravity")/2, 8 * height / 20);
     fill(0, 255, 0);
     rect(width / 4, 1.7 * height / 4, width / 2, height / 40);
     fill(255, 0, 0);
@@ -57,6 +57,6 @@ void draw() {
     strokeWeight(1);
     fill(255, 255, 0);
     textSize(height / 5);
-    text("start", width / 4 + width / 8, height - 1.1 * height / 4);
+    text("Start", width / 2 - textWidth("Start")/2, height - 1.1 * height / 4);
   }
 }
