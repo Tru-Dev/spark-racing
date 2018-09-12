@@ -76,25 +76,20 @@ void draw() {
       if (Math.pow(Math.pow(mouseX - speedx, 2) + Math.pow(mouseY - height / 8 - height / 80, 2), 0.5) < height / 40) {
         dragging = 1;
         offset = (int)(mouseX - speedx);
-      } else if (Math.pow(Math.pow(mouseX - jumpx, 2) + Math.pow(mouseY - 1.1 * height / 4 - height / 80, 2), 0.5) < height / 40) {
+      }
+      else if (Math.pow(Math.pow(mouseX - jumpx, 2) + Math.pow(mouseY - 1.1 * height / 4 - height / 80, 2), 0.5) < height / 40) {
         dragging = 2;
         offset = (int)(mouseX - jumpx);
-      } else if (Math.pow(Math.pow(mouseX - gravityx, 2) + Math.pow(mouseY - 1.7 * height / 4 - height / 80, 2), 0.5) < height / 40) {
+      }
+      else if (Math.pow(Math.pow(mouseX - gravityx, 2) + Math.pow(mouseY - 1.7 * height / 4 - height / 80, 2), 0.5) < height / 40) {
         dragging = 3;
         offset = (int)(mouseX - gravityx);
       }
-    } else if (dragging > 0) {
-      if (mouseX - offset > width / 4 && mouseX - offset < 3 * width / 4) {
-        if (dragging == 1) {
-          speedx = mouseX - offset;
-          speed = (speedx - width / 4) / (width / 2) * (maxspeed - minspeed) + minspeed;
-        } else if (dragging == 2) {
-          jumpx = mouseX - offset;
-          jump = (jumpx - width / 4) / (width / 2) * (maxjump - minjump) + minjump;
-        } else if (dragging == 3) {
-          gravityx = mouseX - offset;
-          gravity = (gravityx - width / 4) / (width / 2) * (maxgravity - mingravity) + mingravity;
-        }
+    }
+    else if (dragging > 0) {
+      if (dragging == 1) {
+        speedx = mouseX - offset;
+        
       }
     }
   }
