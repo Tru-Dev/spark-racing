@@ -76,8 +76,7 @@ void draw() {
     text("Start", width / 2 - textWidth("Start")/2, height - 1.1 * height / 4);
     if (!mousePressed) {
       dragging = 0;
-    }
-    else if (mousepressed) {
+    } else if (mousepressed) {
       if (Math.pow(Math.pow(mouseX - speedx, 2) + Math.pow(mouseY - height / 8 - height / 80, 2), 0.5) < height / 40) {
         dragging = 1;
         offset = (int)(mouseX - speedx);
@@ -89,14 +88,13 @@ void draw() {
         offset = (int)(mouseX - gravityx);
       }
     } else if (dragging > 0) {
-      else if (mouseX < 3 * width / 4 && mouseX > width / 4 && mouseY > height / 2 && mouseY < height / 2 + 0.7 * height / 2) {
-        speed *= k;
-        jump *= k;
-        gravity *= k;
-        pre = false;
-      }
-    }
-    else if (dragging > 0) {
+    
+    } else if (mouseX < 3 * width / 4 && mouseX > width / 4 && mouseY > height / 2 && mouseY < height / 2 + 0.7 * height / 2) {
+      speed *= k;
+      jump *= k;
+      gravity *= k;
+      pre = false;
+    } else if (dragging > 0) {
       if (mouseX - offset > width / 4 && mouseX - offset < 3 * width / 4) {
         if (dragging == 1) {
           speedx = mouseX - offset;
@@ -110,8 +108,7 @@ void draw() {
         }
       }
     }
-  }
-  else {
+  } else {
     //image(car, width / 4, 3 * height / 4, width / 2, height / 8);
   }
 }
