@@ -88,9 +88,7 @@ void draw() {
         dragging = 3;
         offset = (int)(mouseX - gravityx);
       }
-<<<<<<< HEAD
     } else if (dragging > 0) {
-=======
       else if (mouseX < 3 * width / 4 && mouseX > width / 4 && mouseY > height / 2 && mouseY < height / 2 + 0.7 * height / 2) {
         speed *= k;
         jump *= k;
@@ -99,7 +97,6 @@ void draw() {
       }
     }
     else if (dragging > 0) {
->>>>>>> branch 'master' of https://github.com/Tru-Dev/spark-racing.git
       if (mouseX - offset > width / 4 && mouseX - offset < 3 * width / 4) {
         if (dragging == 1) {
           speedx = mouseX - offset;
