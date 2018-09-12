@@ -1,4 +1,7 @@
 PGraphics pg;
+PImage car;
+PImage wheel;
+
 boolean pre = true;
 boolean mousepressed = false;
 boolean lastmouse = false;
@@ -27,15 +30,17 @@ float k = height / 800;
 void setup() {
   size(800, 600);
   pg = createGraphics(800, 600);
-} //<>//
+  car = loadImage("car.png");
+  wheel = loadImage("wheel.png");
+}
 void draw() {
   mousepressed = !lastmouse && mousePressed;
   lastmouse = mousePressed;
+  strokeWeight(1);
+  stroke(0);
+  fill(0, 252, 233);
+  rect(0, 0, width, height);
   if (pre) {
-    strokeWeight(1);
-    stroke(0);
-    fill(0, 252, 233);
-    rect(0, 0, width, height);
     textSize(height / 20);
     fill(252, 143, 0);
     text("Speed", width / 2 - textWidth("Speed")/2, 2 * height / 20);
@@ -83,7 +88,18 @@ void draw() {
         dragging = 3;
         offset = (int)(mouseX - gravityx);
       }
+<<<<<<< HEAD
     } else if (dragging > 0) {
+=======
+      else if (mouseX < 3 * width / 4 && mouseX > width / 4 && mouseY > height / 2 && mouseY < height / 2 + 0.7 * height / 2) {
+        speed *= k;
+        jump *= k;
+        gravity *= k;
+        pre = false;
+      }
+    }
+    else if (dragging > 0) {
+>>>>>>> branch 'master' of https://github.com/Tru-Dev/spark-racing.git
       if (mouseX - offset > width / 4 && mouseX - offset < 3 * width / 4) {
         if (dragging == 1) {
           speedx = mouseX - offset;
@@ -97,5 +113,8 @@ void draw() {
         }
       }
     }
+  }
+  else {
+    //image(car, width / 4, 3 * height / 4, width / 2, height / 8);
   }
 }
