@@ -3,6 +3,7 @@ boolean pre = true;
 boolean mousepressed = false;
 boolean lastmouse = false;
 int dragging = 0;
+int offset = 0;
 
 float midspeed = 30;
 float speed = midspeed;
@@ -68,8 +69,26 @@ void draw() {
     fill(255, 255, 0);
     textSize(height / 5);
     text("Start", width / 2 - textWidth("Start")/2, height - 1.1 * height / 4);
-    if (mousepressed) {
-      if (Math.pow(Math.pow(mouseX - speedx, 2) + Math.pow(mouseY - height / 20, 2), 0.5) < height / 20) {
+    if (!mousePressed) {
+      dragging = 0;
+    }
+    else if (mousepressed) {
+      if (Math.pow(Math.pow(mouseX - speedx, 2) + Math.pow(mouseY - height / 8 - height / 80, 2), 0.5) < height / 40) {
+        dragging = 1;
+        offset = (int)(mouseX - speedx);
+      }
+      else if (Math.pow(Math.pow(mouseX - jumpx, 2) + Math.pow(mouseY - 1.1 * height / 4 - height / 80, 2), 0.5) < height / 40) {
+        dragging = 2;
+        offset = (int)(mouseX - jumpx);
+      }
+      else if (Math.pow(Math.pow(mouseX - gravityx, 2) + Math.pow(mouseY - 1.7 * height / 4 - height / 80, 2), 0.5) < height / 40) {
+        dragging = 3;
+        offset = (int)(mouseX - gravityx);
+      }
+    }
+    else if (dragging > 0) {
+      if (dragging == 1) {
+        speedx = mouseX - offset;
         
       }
     }
