@@ -1,5 +1,7 @@
 PGraphics pg;
 boolean pre = true;
+boolean mousepressed = false;
+
 int midspeed = 30;
 int speed = midspeed;
 int minspeed = 10;
@@ -56,5 +58,5 @@ void draw() {
     fill(255, 255, 0);
     textSize(height / 5);
     text("start", width / 4 + width / 8, height - 1.1 * height / 4);
-  }   
+  }
 }
