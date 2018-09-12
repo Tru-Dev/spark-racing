@@ -87,9 +87,19 @@ void draw() {
       }
     }
     else if (dragging > 0) {
-      if (dragging == 1) {
-        speedx = mouseX - offset;
-        
+      if (mouseX - offset > width / 4 && mouseX - offset < 3 * width / 4) {
+        if (dragging == 1) {
+          speedx = mouseX - offset;
+          speed = (speedx - width / 4) / (width / 2) * (maxspeed - minspeed) + minspeed;
+        }
+        else if (dragging == 2) {
+          jumpx = mouseX - offset;
+          jump = (jumpx - width / 4) / (width / 2) * (maxjump - minjump) + minjump;
+        }
+        else if (dragging == 3) {
+          gravityx = mouseX - offset;
+          gravity = (gravityx - width / 4) / (width / 2) * (maxgravity - mingravity) + mingravity;
+        }
       }
     }
   }
