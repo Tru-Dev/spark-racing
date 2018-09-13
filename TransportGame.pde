@@ -46,7 +46,7 @@ Car car;
 ArrayList<Pipe> pipes;
 Pipe[][] map;
 void setup() {
-  size(1960, 1080);
+  size(800, 600);
   wheel = loadImage("wheel.png");
   carIm = loadImage("car.png");
   ground = loadImage("ground.png");
