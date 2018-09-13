@@ -2,7 +2,8 @@ PGraphics pg;
 PImage carIm;
 PImage wheel;
 PImage ground;
-PImage pipe;
+PImage head;
+PImage base;
 
 int groundy;
 int groundx;
@@ -41,13 +42,15 @@ float time;
 float k;
 Car car;
 ArrayList<Pipe> pipes;
+Pipe pipe;
 void setup() {
   size(1960, 1080);
   pg = createGraphics(800, 600);
   wheel = loadImage("wheel.png");
   carIm = loadImage("car.png");
   ground = loadImage("ground.png");
-  pipe = loadImage("pipe.png");
+  head = loadImage("head.png");
+  base = loadImage("base.png");
   
   groundy = 4 * height / 5;
   groundx = 0;
@@ -85,7 +88,7 @@ void setup() {
   frame = 0;
   k = height / 1080;
   car = new Car();
-  one = new Pipe(100, 600, true);
+  pipe = new Pipe(100, 400, false);
 }
 void showscore() {
   stroke(0);
@@ -211,6 +214,7 @@ void draw() {
       car.speedy = jump;
     }
     showscore();
+    pipe.show();
   }
 }
 class Car {
@@ -289,12 +293,14 @@ class Pipe {
    int height;
    boolean flip;
    boolean alive;
+   float xtoy;
    Pipe(int xsize, int ysize, boolean swap) {
      x = width;
      flip = swap;
      this.length = xsize;
      this.height = ysize;
      alive = true;
+     xtoy = 0.5;
      if (swap) {
        y = 0;
      }
@@ -305,12 +311,13 @@ class Pipe {
    void show() {
      if (alive) {
        if (!flip) {
-         image(pipe, x, y, this.length, this.height);
+         image(head, x, y, this.length, this.length * xtoy);
+         image(base, x, y + this.length * xtoy, this.length, this.height - this.length * xtoy);
        }
        else {
          translate(x + this.length / 2, this.height / 2);
          rotate((float)Math.PI);
-         image(pipe, -this.length / 2, -this.height / 2, this.length, this.height);
+         image(head, -this.length / 2, -this.height / 2, this.length, this.height);
          rotate(-(float)Math.PI);
          translate(-this.length / 2, -this.height / 2);
        }
