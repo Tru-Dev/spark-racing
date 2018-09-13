@@ -1,5 +1,11 @@
 PImage carIm;
 PImage wheel;
+PImage wheel1;
+PImage wheel2;
+PImage wheel3;
+PImage wheel4;
+PImage wheel5;
+PImage wheel6;
 PImage ground;
 PImage head;
 PImage base;
@@ -35,6 +41,7 @@ float mingravity;
 float maxgravity;
 float gravityx;
 
+boolean temp;
 int basepipetime;
 int pipetime;
 float c;
@@ -48,7 +55,7 @@ Pipe[][] map;
 void setup() {
   size(1960, 1080);
   wheel = loadImage("wheel.png");
-  carIm = loadImage("car.png");
+  carIm = loadImage("car1.png");
   ground = loadImage("ground.png");
   head = loadImage("head.png");
   base = loadImage("base.png");
@@ -84,6 +91,7 @@ void setup() {
   maxgravity = 2.25;
   gravityx = width / 2;
   
+  temp = true;
   basepipetime = 120;
   pipetime = basepipetime;
   c = height / 10;
@@ -91,7 +99,7 @@ void setup() {
   time = 0;
   frame = 0;
   k = height / 1080.0;
-  car = new Car();
+  car = new Car(wheel);
   pipes = new ArrayList<Pipe>();
   map = new Pipe[][]{{new Pipe(c, c * 2, false), new Pipe(1.5 * c, 3 * c, false)}, {new Pipe(c, 3 * c, false), new Pipe(2 * c, 3 * c, false)}, {new Pipe(3 * c, 3 * c, false), new Pipe(2 * c, 3 * c, false)}, {new Pipe(3 * c, 3 * c, false), new Pipe(1.5 * c, 3 * c, false)}, {new Pipe(c, c * 7, true), new Pipe(1.5 * c, c * 6, true)}, {new Pipe(c, c * 4, true), new Pipe(c, c / 2, false), new Pipe(c / 2, c * 4, true), new Pipe(c / 2, c, false)}, {new Pipe(c, c * 5.5, true), new Pipe(c, c * 1, false), new Pipe(c, c * 4, true), new Pipe(c, c * 2, false)}, {new Pipe(c * 2, c * 5, true), new Pipe(c * 2, c * 1.5, false), new Pipe(c * 1.5, c * 5, true), new Pipe(c * 1.5, c, false)}};
 }
@@ -136,7 +144,12 @@ void draw() {
   stroke(0);
   fill(0, 252, 233);
   rect(0, 0, width, height);
-  if (pre) {
+  if (temp) {
+    textSize(height / 20);
+    fill(252, 143, 0);
+    text("Choose wheel", width / 2 - textWidth("Choose, wheel") / 2, height / 10);
+  }
+  else if (pre) {
     textSize(height / 20);
     fill(252, 143, 0);
     text("Speed", width / 2 - textWidth("Speed")/2, 2 * height / 20);
@@ -284,6 +297,7 @@ void draw() {
   }
 }
 class Car {
+  PImage wheelIm;
   boolean grounded;
   int x;
   int y;
@@ -298,7 +312,8 @@ class Car {
   float height;
   float tirespin;
   float tireangle;
-  Car() {
+  Car(PImage wheeltype) {
+    wheelIm = wheeltype;
     speedy = 0;
     grounded = true;
     x = width / 10;
