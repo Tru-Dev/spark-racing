@@ -1,39 +1,127 @@
 PGraphics pg;
-PImage car;
+PImage carIm;
 PImage wheel;
+PImage ground;
+PImage pipe;
 
-boolean pre = true;
-boolean mousepressed = false;
-boolean lastmouse = false;
-int dragging = 0;
-int offset = 0;
+int groundy;
+int groundx;
+float groundoff;
 
-float midspeed = 30;
-float speed = midspeed;
-float minspeed = 10;
-float maxspeed = 50;
-float speedx = width / 2;
+boolean pre;
+boolean mousepressed;
+boolean lastmouse;
+boolean space;
+boolean lastspace;
+boolean spacepressed;
+int dragging;
+int offset;
 
-float midjump = 30;
-float jump = midjump;
-float minjump = 10;
-float maxjump = 50;
-float jumpx = width / 2;
+float midspeed;
+float speed;
+float minspeed;
+float maxspeed;
+float speedx;
+
+float midjump;
+float jump;
+float minjump;
+float maxjump;
+float jumpx;
  //<>//
-float midgravity = 30;
-float gravity = midgravity;
-float mingravity = 10;
-float maxgravity = 50;
-float gravityx = width / 2;
+float midgravity;
+float gravity;
+float mingravity;
+float maxgravity;
+float gravityx;
 
-float k = height / 800;
+boolean gameover;
+int frame;
+float time;
+float k;
+Car car;
+ArrayList<Pipe> pipes;
 void setup() {
-  size(800, 600);
+  size(1960, 1080);
   pg = createGraphics(800, 600);
-  car = loadImage("car.png");
   wheel = loadImage("wheel.png");
+  carIm = loadImage("car.png");
+  ground = loadImage("ground.png");
+  pipe = loadImage("pipe.png");
+  
+  groundy = 4 * height / 5;
+  groundx = 0;
+  groundoff = 1.1 * height / 100;
+  
+  pre = true;
+  mousepressed = false;
+  lastmouse = false;
+  space = false;
+  lastspace = false;
+  spacepressed = false;
+  dragging = 0;
+  offset = 0;
+  
+  midspeed = 30;
+  speed = midspeed;
+  minspeed = 20;
+  maxspeed = 40;
+  speedx = width / 2;
+  
+  midjump = 30;
+  jump = midjump;
+  minjump = 25;
+  maxjump = 35;
+  jumpx = width / 2;
+  
+  midgravity = 2;
+  gravity = midgravity;
+  mingravity = 1.75;
+  maxgravity = 2.25;
+  gravityx = width / 2;
+  
+  gameover = false;
+  time = 0;
+  frame = 0;
+  k = height / 1080;
+  car = new Car();
+  one = new Pipe(100, 600, true);
+}
+void showscore() {
+  stroke(0);
+  fill(255, 0, 0);
+  textSize(height / 20);
+  text((int)(time) + "", width / 2 - textWidth((int)(time) + "") / 2, height / 20);
+}
+void showground() {
+   image(ground, -groundx, groundy - groundoff, width, height - groundy);
+   image(ground, width - groundx, groundy - groundoff, width, height - groundy);
+   if (!gameover) {
+     groundx += speed;
+     if (groundx > width) {
+       groundx -= width;
+     }
+   }
+}
+void keyPressed() {
+  if (key == ' ') {
+    space = !lastspace;
+    lastspace = true;
+    spacepressed = true;
+  }
+}
+void keyReleased() {
+  if (key == ' ') {
+    lastspace = false;
+    space = false;
+    spacepressed = false;
+  }
 }
 void draw() {
+  if (!pre && !gameover) {
+    frame++;
+    time += 1 / 60.0;
+  }
   mousepressed = !lastmouse && mousePressed;
   lastmouse = mousePressed;
   strokeWeight(1);
@@ -81,33 +169,33 @@ void draw() {
       if (Math.pow(Math.pow(mouseX - speedx, 2) + Math.pow(mouseY - height / 8 - height / 80, 2), 0.5) < height / 40) {
         dragging = 1;
         offset = (int)(mouseX - speedx);
-      } else if (Math.pow(Math.pow(mouseX - jumpx, 2) + Math.pow(mouseY - 1.1 * height / 4 - height / 80, 2), 0.5) < height / 40) {
+      } 
+      else if (Math.pow(Math.pow(mouseX - jumpx, 2) + Math.pow(mouseY - 1.1 * height / 4 - height / 80, 2), 0.5) < height / 40) {
         dragging = 2;
         offset = (int)(mouseX - jumpx);
-      } else if (Math.pow(Math.pow(mouseX - gravityx, 2) + Math.pow(mouseY - 1.7 * height / 4 - height / 80, 2), 0.5) < height / 40) {
+      } 
+      else if (Math.pow(Math.pow(mouseX - gravityx, 2) + Math.pow(mouseY - 1.7 * height / 4 - height / 80, 2), 0.5) < height / 40) {
         dragging = 3;
         offset = (int)(mouseX - gravityx);
       }
-<<<<<<< HEAD
-    } else if (dragging > 0) {
-=======
       else if (mouseX < 3 * width / 4 && mouseX > width / 4 && mouseY > height / 2 && mouseY < height / 2 + 0.7 * height / 2) {
         speed *= k;
         jump *= k;
         gravity *= k;
         pre = false;
       }
-    }
+    } 
     else if (dragging > 0) {
->>>>>>> branch 'master' of https://github.com/Tru-Dev/spark-racing.git
       if (mouseX - offset > width / 4 && mouseX - offset < 3 * width / 4) {
         if (dragging == 1) {
           speedx = mouseX - offset;
           speed = (speedx - width / 4) / (width / 2) * (maxspeed - minspeed) + minspeed;
-        } else if (dragging == 2) {
+        } 
+        else if (dragging == 2) {
           jumpx = mouseX - offset;
           jump = (jumpx - width / 4) / (width / 2) * (maxjump - minjump) + minjump;
-        } else if (dragging == 3) {
+        } 
+        else if (dragging == 3) {
           gravityx = mouseX - offset;
           gravity = (gravityx - width / 4) / (width / 2) * (maxgravity - mingravity) + mingravity;
         }
@@ -115,6 +203,131 @@ void draw() {
     }
   }
   else {
-    //image(car, width / 4, 3 * height / 4, width / 2, height / 8);
+    car.show();
+    showground();
+    if (car.grounded && space && !gameover) {
+      car.grounded = false;
+      space = false;
+      car.speedy = jump;
+    }
+    showscore();
   }
 }
+class Car {
+  boolean grounded;
+  int x;
+  int y;
+  float speedy;
+  float xyratio;
+  float wheelratio;
+  float towheelx1;
+  float towheelx2;
+  float towheely;
+  float length;
+  float wheelsize;
+  float height;
+  float tirespin;
+  float tireangle;
+  Car() {
+    speedy = 0;
+    grounded = true;
+    x = width / 10;
+    xyratio = 0.27467811158;
+    wheelratio = 1.7253164557;
+    towheelx1 = 10.614953271;
+    towheelx2 = 1.37457044674;
+    towheely = 1.82222222222;
+    this.length = width / 5;
+    wheelsize = this.length * xyratio / wheelratio;
+    this.height = this.length * xyratio;
+    tirespin = speed / (k * 100);
+    tireangle = 0;
+    y = (int)(groundy - this.height);
+  }
+  void show() {
+    if (!grounded && !gameover) {
+      y -= speedy;
+      speedy -= gravity;
+      if (spacepressed && speedy > 0) {
+        speedy += gravity / 2;
+      }
+      if (y + this.height >= groundy && speedy < 0) {
+        y = (int)(groundy + - this.height);
+        speedy = 0;
+        grounded = true;
+      }
+    }
+    image(carIm, x, y, this.length, this.height);
+    translate(x + this.length / towheelx1 + wheelsize / 2, y + this.height / towheely + wheelsize / 2);
+    if (grounded && !gameover) {
+      tireangle += tirespin;
+      if (tireangle > 2 * Math.PI) {
+        tireangle -= 2 * Math.PI;
+      }
+      rotate(tireangle);
+    }
+    image(wheel, -wheelsize / 2, -wheelsize / 2, wheelsize, wheelsize);
+    if (grounded && !gameover) {
+      rotate(-tireangle);
+    }
+    translate(-(x + this.length / towheelx1 + wheelsize / 2), -(y + this.height / towheely + wheelsize / 2));
+    translate(x + this.length / towheelx2 + wheelsize / 2, y + this.height / towheely + wheelsize / 2);
+    if (grounded && !gameover) {
+      rotate(tireangle);
+    }
+    image(wheel, -wheelsize / 2, -wheelsize / 2, wheelsize, wheelsize);
+    if (grounded && !gameover) {
+      rotate(-tireangle);
+    }
+    translate(-(x + this.length / towheelx2 + wheelsize / 2), -(y + this.height / towheely + wheelsize / 2));
+ }
+}
+class Pipe {
+   int x;
+   int y;
+   int length;
+   int height;
+   boolean flip;
+   boolean alive;
+   Pipe(int xsize, int ysize, boolean swap) {
+     x = width;
+     flip = swap;
+     this.length = xsize;
+     this.height = ysize;
+     alive = true;
+     if (swap) {
+       y = 0;
+     }
+     else {
+       y = (int)(groundy - ysize + groundoff);
+     }
+   }
+   void show() {
+     if (alive) {
+       if (!flip) {
+         image(pipe, x, y, this.length, this.height);
+       }
+       else {
+         translate(x + this.length / 2, this.height / 2);
+         rotate((float)Math.PI);
+         image(pipe, -this.length / 2, -this.height / 2, this.length, this.height);
+         rotate(-(float)Math.PI);
+         translate(-this.length / 2, -this.height / 2);
+       }
+       if (!gameover) {
+         x -= speed;
+         if (x < -this.length) {
+           alive = false;
+         }
+         if (car.x < x + this.length && car.x + car.length > x) {
+           if (!flip && car.y > y) {
+             gameover = true;
+           }
+           else if (flip && car.y + car.height < y + this.height) {
+             gameover = true;
+           }
+         }
+       }
+     }
+   }
+ }
