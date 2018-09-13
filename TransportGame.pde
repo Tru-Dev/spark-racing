@@ -6,9 +6,18 @@ PImage wheel3;
 PImage wheel4;
 PImage wheel5;
 PImage wheel6;
+int chosenwheel;
 PImage ground;
 PImage head;
 PImage base;
+
+float[] wheel1stats;
+float[] wheel2stats;
+float[] wheel3stats;
+float[] wheel4stats;
+float[] wheel5stats;
+float[] wheel6stats;
+float[][] wheelstats;
 
 int groundy;
 int groundx;
@@ -41,6 +50,10 @@ float mingravity;
 float maxgravity;
 float gravityx;
 
+float speedk = maxspeed - minspeed;
+float jumpk = maxjump - minjump;
+float gravityk = maxgravity - mingravity;
+
 boolean temp;
 int basepipetime;
 int pipetime;
@@ -54,11 +67,25 @@ ArrayList<Pipe> pipes;
 Pipe[][] map;
 void setup() {
   size(1960, 1080);
-  wheel = loadImage("wheel.png");
+  wheel1 = loadImage("wheel1.png");
+  wheel2 = loadImage("wheel2.png");
+  wheel3 = loadImage("wheel3.png");
+  wheel4 = loadImage("wheel4.png");
+  wheel5 = loadImage("wheel5.png");
+  wheel6 = loadImage("wheel6.png");
   carIm = loadImage("car1.png");
   ground = loadImage("ground.png");
   head = loadImage("head.png");
   base = loadImage("base.png");
+  chosenwheel = 1;
+  
+  wheel1stats = new float[]{midspeed, midjump, midgravity};
+  wheel2stats = new float[]{midspeed + speedk / 4, midjump + jumpk / 4, midgravity + gravityk / 4};
+  wheel3stats = new float[]{midspeed - speedk / 4, midjump - jumpk / 4, midgravity - gravityk / 4};
+  wheel4stats = new float[]{midspeed - speedk / 2, midjump + jumpk / 2, midgravity - gravityk / 2};
+  wheel5stats = new float[]{midspeed + speedk / 2, midjump - jumpk / 2, midgravity + gravityk / 2};
+  wheel6stats = new float[]{midspeed  + speedk / 4, midjump - jumpk / 4, midgravity - gravityk / 4};
+  wheelstats = new float[][]{wheel1stats, wheel2stats, wheel3stats, wheel4stats, wheel5stats, wheel6stats};
   
   groundy = 4 * height / 5;
   groundx = 0;
@@ -148,6 +175,27 @@ void draw() {
     textSize(height / 20);
     fill(252, 143, 0);
     text("Choose wheel", width / 2 - textWidth("Choose, wheel") / 2, height / 10);
+    image(wheel1, 0, 1.5 * height / 10, width / 8, width / 8);
+    image(wheel2, width / 8 + width / 20, 1.5 * height / 10, width / 8, width / 8);
+    image(wheel3, width / 4 + width / 10, 1.5 * height / 10, width / 8, width / 8);
+    image(wheel4, 3 * width / 8 + 3 * width / 20, 1.5 * height / 10, width / 8, width / 8);
+    image(wheel5, width / 2 + width / 5, 1.5 * height / 10, width / 8, width / 8);
+    image(wheel6, 5 * width / 8 + width / 4, 1.5 * height / 10, width / 8, width / 8);
+    image(wheel, width / 8, height / 2, height / 2, height / 2);
+    text("Speed: " + wheelstats[chosenwheel][0], 3 * width / 8 + height / 2 - textWidth("Speed" + wheelstats[chosenwheel][0]) / 2, height / 2);
+    text("Jumpspeed: " + wheelstats[chosenwheel][1], 3 * width / 8 + height / 2 - textWidth("Jumpspeed" + wheelstats[chosenwheel][1]) / 2, height / 2 + height / 10);
+    text("Gravity: " + wheelstats[chosenwheel][2], 3 * width / 8 + height / 2 - textWidth("Gravity" + wheelstats[chosenwheel][2]) / 2, height / 2 + height / 5);
+    textSize(height / 40);
+    text("Press space to start", width - width / 4, 3 * height / 4);
+    if (mousepressed && mouseY > 1.5 * height / 10) {
+    }
+    if (space) {
+      speed = wheelstats[chosenwheel][0];
+      jump = wheelstats[chosenwheel][1];
+      gravity = wheelstats[chosenwheel[2];
+      pre = false;
+      temp = false;
+    }
   }
   else if (pre) {
     textSize(height / 20);
@@ -224,6 +272,7 @@ void draw() {
     }
   }
   else {
+    car.wheelIm = wheel;
     car.show();
     showground();
     if (car.grounded && space && !gameover) {
@@ -292,6 +341,7 @@ void draw() {
         pre = true;
         car.y = groundy + this.height;
         pipetime = basepipetime;
+        temp = true;
       }
     }
   }
