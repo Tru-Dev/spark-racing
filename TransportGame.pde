@@ -44,7 +44,7 @@ Car car;
 ArrayList<Pipe> pipes;
 Pipe pipe;
 void setup() {
-  size(1960, 1080);
+  size(800, 600);
   pg = createGraphics(800, 600);
   wheel = loadImage("wheel.png");
   carIm = loadImage("car.png");
@@ -86,7 +86,7 @@ void setup() {
   gameover = false;
   time = 0;
   frame = 0;
-  k = height / 1080;
+  k = height / 1080.0;
   car = new Car();
   pipe = new Pipe(100, 400, false);
 }
