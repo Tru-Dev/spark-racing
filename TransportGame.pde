@@ -1,4 +1,3 @@
-PGraphics pg;
 PImage carIm;
 PImage wheel;
 PImage ground;
@@ -36,16 +35,17 @@ float mingravity;
 float maxgravity;
 float gravityx;
 
+int pipetime;
+float c;
 boolean gameover;
 int frame;
 float time;
 float k;
 Car car;
 ArrayList<Pipe> pipes;
-Pipe pipe;
+Pipe[][] map;
 void setup() {
   size(1960, 1080);
-  pg = createGraphics(800, 600);
   wheel = loadImage("wheel.png");
   carIm = loadImage("car.png");
   ground = loadImage("ground.png");
@@ -83,12 +83,16 @@ void setup() {
   maxgravity = 2.25;
   gravityx = width / 2;
   
+  pipetime = 120;
+  c = height / 10;
   gameover = false;
   time = 0;
   frame = 0;
-  k = height / 1080;
+  k = height / 1080.0;
   car = new Car();
-  pipe = new Pipe(100, 400, false);
+  pipes = new ArrayList<Pipe>();
+  map = new Pipe[][]{{new Pipe(c, c * 2, false), new Pipe(1.5 * c, 3 * c, false)}, {new Pipe(c, 3 * c, false), new Pipe(2 * c, 3 * c, false)}, {new Pipe(3 * c, 3 * c, false), new Pipe(c, 4 * c, false)}, {new Pipe(3 * c, 4 * c, false), new Pipe(1.5 * c, 4.5 * c, false)}, {new Pipe(c, c * 7, true), new Pipe(1.5 * c, c * 6, true)}, {new Pipe(c, c * 4, true), new Pipe(c, c / 2, false), new Pipe(c / 2, c * 4, true), new Pipe(c / 2, c, false)}, {new Pipe(c, c * 5.5, true), new Pipe(c, c * 1, false), new Pipe(c, c * 4, true), new Pipe(c, c * 2, false)}, {new Pipe(c * 2, c * 5, true), new Pipe(c * 2, c * 1.5, false), new Pipe(c * 1.5, c * 5, true), new Pipe(c * 1.5, c, false)}};
+  println(map.length);
 }
 void showscore() {
   stroke(0);
@@ -213,8 +217,56 @@ void draw() {
       space = false;
       car.speedy = jump;
     }
+    if (frame % pipetime == 0) {
+      if (Math.random() < 0.5) {
+        if (map[frame / pipetime - 1].length == 2) {
+          pipes.add(map[frame / pipetime - 1][0]);
+        }
+        else {
+          pipes.add(map[frame / pipetime - 1][0]);
+          pipes.add(map[frame / pipetime - 1][1]);
+        }
+      }
+      else {
+        if (map[frame / pipetime - 1].length == 2) {
+          pipes.add(map[frame / pipetime - 1][1]);
+        }
+        else {
+          pipes.add(map[frame / pipetime - 1][2]);
+          pipes.add(map[frame / pipetime - 1][3]);
+        }
+      }
+    }
+    for (int index = 0; index < pipes.size(); index++) {
+      pipes.get(index).show();
+      if (!pipes.get(index).alive) {
+        pipes.remove(index);
+        index--;
+      }
+    }
     showscore();
-    pipe.show();
+    if (gameover) {
+      strokeWeight(1);
+      stroke(255, 0, 0);
+      textSize(height / 12);
+      text("GAME OVER", width / 2 - textWidth("GAMEOVER") / 2, height / 2 - height / 12);
+      textSize(height / 20);
+      text("press SPACE to restart", width / 2 - textWidth("press SPACE to restart") / 2, height / 2 + height / 4);
+      if (space) {
+        time = 0;
+        frame = 0;
+        speedx = width / 2;
+        speed = midspeed;
+        jumpx = width / 2;
+        jump = midjump;
+        gravity = midgravity;
+        gravityx = width / 2;
+        gameover = false;
+        pipes = new ArrayList<Pipe>();
+        pre = true;
+        car.y = groundy + this.height;
+      }
+    }
   }
 }
 class Car {
@@ -294,11 +346,11 @@ class Pipe {
    boolean flip;
    boolean alive;
    float xtoy;
-   Pipe(int xsize, int ysize, boolean swap) {
+   Pipe(float xsize, float ysize, boolean swap) {
      x = width;
      flip = swap;
-     this.length = xsize;
-     this.height = ysize;
+     this.length = (int)xsize;
+     this.height = (int)ysize;
      alive = true;
      xtoy = 0.5;
      if (swap) {
@@ -315,11 +367,16 @@ class Pipe {
          image(base, x, y + this.length * xtoy, this.length, this.height - this.length * xtoy);
        }
        else {
-         translate(x + this.length / 2, this.height / 2);
+         translate(x + this.length / 2, this.height - this.length * xtoy / 2);
          rotate((float)Math.PI);
-         image(head, -this.length / 2, -this.height / 2, this.length, this.height);
+         image(head, -this.length / 2, -this.length * xtoy / 2, this.length, this.length * xtoy);
          rotate(-(float)Math.PI);
-         translate(-this.length / 2, -this.height / 2);
+         translate(-x - this.length / 2, -this.height + this.length * xtoy / 2);
+         translate(x + this.length / 2, (this.height - this.length * xtoy) / 2);
+         rotate((float)(Math.PI));
+         image(base, -this.length / 2, -(this.height - this.length * xtoy) / 2, this.length, this.height - this.length * xtoy);
+         rotate((float)(Math.PI));
+         translate(-x - this.length / 2, -(this.height - this.length * xtoy) / 2);
        }
        if (!gameover) {
          x -= speed;
@@ -327,10 +384,11 @@ class Pipe {
            alive = false;
          }
          if (car.x < x + this.length && car.x + car.length > x) {
-           if (!flip && car.y > y) {
+           println(1);
+           if (!flip && car.y - this.height / 10 > y) {
              gameover = true;
            }
-           else if (flip && car.y + car.height < y + this.height) {
+           else if (flip && car.y + this.height / 6 < this.height) {
              gameover = true;
            }
          }
